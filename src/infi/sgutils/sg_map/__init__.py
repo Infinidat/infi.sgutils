@@ -25,7 +25,7 @@ def get_sd_to_hctl_mappings():
     from glob import glob
     from os.path import sep
     sd_devices = filter(lambda path: path.split(sep)[-1].isalpha(), glob("/dev/sda"))
-    return {device_path:get_hctl_for_sd_device(device_path) for device_path in sd_devices)}
+    return {device_path:get_hctl_for_sd_device(device_path) for device_path in sd_devices}
 
 def get_hctl_to_sd_mapping():
     return {hctl:device_path for hctl,device_path in get_sd_to_hctl_mapping().items()}
