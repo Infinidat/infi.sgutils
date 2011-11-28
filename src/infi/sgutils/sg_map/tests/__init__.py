@@ -9,10 +9,10 @@ class SgMapTestCase(unittest.TestCase):
 
     def test_get_sd_to_hctl_mappings(self):
         from .. import get_sd_to_hctl_mappings as getter
-        self.assertIn("/dev/sda", result.keys())
         result = getter()
+        self.assertIn("/dev/sda", result.keys())
 
     def test_sg_to_sd(self):
         from .. import get_sd_from_sg
-        self.assertEqual("sda", get_sd_from_sg("sg1"))
+        self.assertEqual("/dev/sda", get_sd_from_sg("/dev/sg1"))
 
