@@ -33,3 +33,4 @@ def get_hctl_to_sd_mappings():
 def get_sd_from_sg(sg):
     hctl = get_hctl_for_sg_device(sg)
     return get_hctl_to_sd_mappings()[hctl]
+
