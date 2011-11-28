@@ -12,7 +12,7 @@ class SgMapTestCase(unittest.TestCase):
         result = getter()
         self.assertIn("/dev/sda", result.keys())
 
-    def test_get_hctl_to_sd_mappings():
+    def test_get_hctl_to_sd_mappings(self):
         from .. import get_hctl_to_sd_mappings as getter
         result = getter()
 
