@@ -1,0 +1,3 @@
+
+SG_GET_SCSI_ID = 0x2276
+
