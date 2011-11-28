@@ -12,9 +12,10 @@ def ioctl(device_path, op_number, buffer=None):
 def sg_scsi_id(device_path):
     """:returns: a :class:`.SG_GET_SCSI_ID` object"""
     from array import array
-    size = struct.min_max_sizeof().max
+    struct_cls = structures.SG_GET_SCSI_ID
+    size = struct_cls.min_max_sizeof().max
     buffer = array("B", [0]*size)
     result = ioctl(device_path, opcodes.SG_GET_SCSI_ID, buffer)
-    struct = structures.SG_GET_SCSI_ID.from_string(buffer)
+    struct = struct_cls.from_string(buffer)
     return struct
 
