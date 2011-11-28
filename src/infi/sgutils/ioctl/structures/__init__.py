@@ -1,6 +1,7 @@
 from infi.instruct import Struct, FixedSizeArray
 from infi.instruct import SNInt32 as Int
 from infi.instruct import SNInt16 as Short
+from infi.instruct import SNInt8 as Byte
 
 
 # http://tldp.org/HOWTO/SCSI-Generic-HOWTO/g_scsi_id.html
@@ -16,4 +17,10 @@ class SG_GET_SCSI_ID(Struct):
                 FixedSizeArray("unused", 2, Int),
                ]
 
+# http://tldp.org/HOWTO/SCSI-Generic-HOWTO/scsi_g_idlun.html
+class SCSI_IDLUN(Struct):
+    _fields_ = [
+                Int("four_in_one"),
+                Int("host_unique_id"),
+               ]
 

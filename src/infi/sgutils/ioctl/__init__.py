@@ -16,6 +16,16 @@ def sg_scsi_id(device_path):
     size = struct_cls.min_max_sizeof().max
     buffer = array("B", [0]*size)
     result = ioctl(device_path, opcodes.SG_GET_SCSI_ID, buffer)
-    struct = struct_cls.from_string(buffer)
+    struct = struct_cls.create_from_string(buffer)
+    return struct
+
+def scsi_ioctl_get_idlun(device_path):
+    """:returns: a :class:`.SCSI_IDLUN` object"""
+    from array import array
+    struct_cls = structures.SCSI_IDLUN
+    size = struct_cls.min_max_sizeof().max
+    buffer = array("B", [0]*size)
+    result = ioctl(device_path, opcodes.SCSI_IOCTL_GET_IDLUN, buffer)
+    struct = struct_cls.create_from_string(buffer)
     return struct
 
