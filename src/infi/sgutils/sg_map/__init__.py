@@ -19,11 +19,11 @@ def get_hctl_for_sd_device(device_path):
 
 def get_sg_to_hctl_mappings():
     from glob import glob
-    return {device_path:get_hctl_for_sg_device(device_path) for device_path in glob("/dev/sg*")
+    return {device_path:get_hctl_for_sg_device(device_path) for device_path in glob("/dev/sg*")}
 
 def get_sd_to_hctl_mappings():
     from glob import glob
-    return {device_path:get_hctl_for_sd_device(device_path) for device_path in glob("/dev/sd*")
+    return {device_path:get_hctl_for_sd_device(device_path) for device_path in glob("/dev/sd*")}
 
 def get_hctl_to_sd_mapping():
     return {hctl:device_path for hctl,device_path in get_sd_to_hctl_mapping().items()}
