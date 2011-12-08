@@ -18,5 +18,5 @@ class SgMapTestCase(unittest.TestCase):
 
     def test_sg_to_sd(self):
         from .. import get_sd_from_sg
-        self.assertIn("/dev/sda", [get_sd_from_sg("/dev/sg1"), get_sd_from_sg("/dev/sg0"),])
+        self.assertIn(get_sd_from_sg("/dev/sg1"), ["/dev/sda", "/dev/sdb"])
 
