@@ -13,8 +13,9 @@ def get_hctl_for_sd_device(device_path):
     # (scsi_device_id | (lun << 8) | (channel << 16) | (host_no << 24))
     host = (struct.four_in_one >> 24)
     channel = (struct.four_in_one >> 16) & 0xFF
-    target = (struct.four_in_one >> 8) & 0xFF
-    lun = (struct.four_in_one) & 0xFF
+    target = (struct.four_in_one) & 0xFF
+    lun = (struct.four_in_one >> 8) & 0xFF
+    result = HCTL(host, channel, target, lun)
     return HCTL(host, channel, target, lun)
 
 def get_sg_to_hctl_mappings():
@@ -24,7 +25,7 @@ def get_sg_to_hctl_mappings():
 def get_sd_to_hctl_mappings():
     from glob import glob
     from os.path import sep
-    sd_devices = filter(lambda path: path.split(sep)[-1].isalpha(), glob("/dev/sda"))
+    sd_devices = filter(lambda path: path.split(sep)[-1].isalpha(), glob("/dev/sd*"))
     return {device_path:get_hctl_for_sd_device(device_path) for device_path in sd_devices}
 
 def get_hctl_to_sd_mappings():
