@@ -1,13 +1,17 @@
 import opcodes
 import structures
+import os
 
 def ioctl(device_path, op_number, buffer=None):
-    with open(device_path) as fd:
+    fd = os.open(device_path, os.O_RDONLY | os.O_NONBLOCK)
+    try:
         from fcntl import ioctl as _ioctl
         args = [fd, op_number,]
         if buffer is not None:
             args.extend([buffer, True])
         return _ioctl(*args)
+    finally:
+        os.close(fd)
 
 def sg_scsi_id(device_path):
     """:returns: a :class:`.SG_GET_SCSI_ID` object"""
