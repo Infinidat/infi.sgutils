@@ -26,7 +26,7 @@ def lun_reset(device_path):
 
 
 def host_reset(device_path):
-    reset(device_path, SG_SCSI_HOST_RESET)
+    reset(device_path, SG_SCSI_RESET_HOST)
 
 
 def bus_reset(device_path):
