@@ -15,8 +15,7 @@ def reset(device_path, reset_type):
     _buffer = array.array('H', [reset_type])
     fd = os.open(device_path, os.O_RDWR | os.O_NONBLOCK)
     try:
-        result = fcntl.ioctl(fd, SG_SCSI_RESET, _buffer, False)
-        assert array.array('B', result)[0] == reset_type
+        fcntl.ioctl(fd, SG_SCSI_RESET, _buffer, False)
     finally:
         os.close(fd)
 
