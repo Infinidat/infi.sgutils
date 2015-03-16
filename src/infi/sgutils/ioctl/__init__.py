@@ -1,5 +1,5 @@
-import opcodes
-import structures
+from . import opcodes
+from . import structures
 import os
 
 def ioctl(device_path, op_number, buffer=None):
@@ -32,4 +32,3 @@ def scsi_ioctl_get_idlun(device_path):
     result = ioctl(device_path, opcodes.SCSI_IOCTL_GET_IDLUN, buffer)
     struct = struct_cls.create_from_string(buffer)
     return struct
-
