@@ -31,7 +31,13 @@ def get_sd_to_hctl_mappings():
 def get_hctl_to_sd_mappings():
     return {hctl:device_path for device_path,hctl in get_sd_to_hctl_mappings().items()}
 
+def get_hctl_to_sg_mappings():
+    return {hctl:device_path for device_path,hctl in get_sg_to_hctl_mappings().items()}
+
 def get_sd_from_sg(sg):
     hctl = get_hctl_for_sg_device(sg)
     return get_hctl_to_sd_mappings()[hctl]
 
+def get_sg_from_sd(sd):
+    hctl = get_hctl_for_sd_device(sd)
+    return get_hctl_to_sg_mappings()[hctl]
