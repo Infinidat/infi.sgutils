@@ -32,3 +32,10 @@ def scsi_ioctl_get_idlun(device_path):
     result = ioctl(device_path, opcodes.SCSI_IOCTL_GET_IDLUN, buffer)
     struct = struct_cls.create_from_string(buffer)
     return struct
+
+def scsi_ioctl_get_bus_number(device_path):
+    """:returns: a :class:`.SG_GET_SCSI_ID` object"""
+    from ctypes import c_ulong
+    buffer = c_ulong()
+    result = ioctl(device_path, opcodes.SCSI_IOCTL_GET_BUS_NUMBER, buffer)
+    return buffer.value
