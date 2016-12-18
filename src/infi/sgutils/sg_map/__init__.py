@@ -6,8 +6,8 @@ def get_hctl_for_sg_device(device_path):
     return HCTL(struct.host_no, struct.channel, struct.scsi_id, struct.lun)
 
 def get_hctl_for_sd_device(device_path):
-    from ..ioctl import scsi_ioctl_get_idlun as _ioctl
-    struct = _ioctl(device_path)
+    from ..ioctl import scsi_ioctl_get_idlun, scsi_ioctl_get_bus_number
+    struct = scsi_ioctl_get_idlun(device_path)
     # http://tldp.org/HOWTO/SCSI-Generic-HOWTO/scsi_g_idlun.html
     # "four_in_one" is made up as follows:
     # (scsi_device_id | (lun << 8) | (channel << 16) | (host_no << 24))
@@ -16,6 +16,8 @@ def get_hctl_for_sd_device(device_path):
     target = (struct.four_in_one) & 0xFF
     lun = (struct.four_in_one >> 8) & 0xFF
     result = HCTL(host, channel, target, lun)
+    # STORAGEMODEL-376: re-read host number with a ioctl that doesn't limit the value to 255
+    host = scsi_ioctl_get_bus_number(device_path)
     return HCTL(host, channel, target, lun)
 
 def get_sg_to_hctl_mappings():
