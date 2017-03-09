@@ -35,7 +35,9 @@ def scsi_ioctl_get_idlun(device_path):
 
 def scsi_ioctl_get_bus_number(device_path):
     """:returns: a :class:`.SG_GET_SCSI_ID` object"""
-    from ctypes import c_ulong
-    buffer = c_ulong()
+    from ctypes import c_buffer
+    import struct
+    buffer = c_buffer(4)
     result = ioctl(device_path, opcodes.SCSI_IOCTL_GET_BUS_NUMBER, buffer)
-    return buffer.value
+    #  using @I due to STORAGEMODEL-385
+    return struct.unpack("@I", buffer.raw)[0]
