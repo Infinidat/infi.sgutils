@@ -1,40 +1,31 @@
 from infi.dtypes.hctl import HCTL
+import os
 
 def get_hctl_for_sg_device(device_path):
-    from ..ioctl import sg_scsi_id as _ioctl
-    struct = _ioctl(device_path)
-    return HCTL(struct.host_no, struct.channel, struct.scsi_id, struct.lun)
+    device_link = os.readlink(os.path.join(os.path.sep, 'sys', 'class', 'scsi_generic', os.path.basename(device_path), 'device'))
+    host, channel, target, lun = os.path.basename(device_link).split(':')
+    return HCTL(int(host), int(channel), int(target), int(lun))
 
 def get_hctl_for_sd_device(device_path):
-    from ..ioctl import scsi_ioctl_get_idlun, scsi_ioctl_get_bus_number
-    struct = scsi_ioctl_get_idlun(device_path)
-    # http://tldp.org/HOWTO/SCSI-Generic-HOWTO/scsi_g_idlun.html
-    # "four_in_one" is made up as follows:
-    # (scsi_device_id | (lun << 8) | (channel << 16) | (host_no << 24))
-    host = (struct.four_in_one >> 24)
-    channel = (struct.four_in_one >> 16) & 0xFF
-    target = (struct.four_in_one) & 0xFF
-    lun = (struct.four_in_one >> 8) & 0xFF
-    result = HCTL(host, channel, target, lun)
-    # STORAGEMODEL-376: re-read host number with a ioctl that doesn't limit the value to 255
-    host = scsi_ioctl_get_bus_number(device_path)
-    return HCTL(host, channel, target, lun)
+    device_link = os.readlink(os.path.join(os.path.sep, 'sys', 'class', 'block', os.path.basename(device_path), 'device'))
+    host, channel, target, lun = os.path.basename(device_link).split(':')
+    return HCTL(int(host), int(channel), int(target), int(lun))
 
 def get_sg_to_hctl_mappings():
     from glob import glob
-    return {device_path:get_hctl_for_sg_device(device_path) for device_path in glob("/dev/sg*")}
+    return {device_path: get_hctl_for_sg_device(device_path) for device_path in glob("/dev/sg*")}
 
 def get_sd_to_hctl_mappings():
     from glob import glob
     from os.path import sep
     sd_devices = filter(lambda path: path.split(sep)[-1].isalpha(), glob("/dev/sd*"))
-    return {device_path:get_hctl_for_sd_device(device_path) for device_path in sd_devices}
+    return {device_path: get_hctl_for_sd_device(device_path) for device_path in sd_devices}
 
 def get_hctl_to_sd_mappings():
-    return {hctl:device_path for device_path,hctl in get_sd_to_hctl_mappings().items()}
+    return {hctl: device_path for device_path, hctl in get_sd_to_hctl_mappings().items()}
 
 def get_hctl_to_sg_mappings():
-    return {hctl:device_path for device_path,hctl in get_sg_to_hctl_mappings().items()}
+    return {hctl: device_path for device_path, hctl in get_sg_to_hctl_mappings().items()}
 
 def get_sd_from_sg(sg):
     hctl = get_hctl_for_sg_device(sg)
